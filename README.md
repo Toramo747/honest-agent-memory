@@ -6,7 +6,7 @@
 > *honest-by-design* memory agent should be strong — and a methodological finding that matters for
 > anyone benchmarking with an LLM judge.
 >
-> Dated 2026-07-10. Numbers are early (n=30) and narrow by design — read the *Limitations* section.
+> Dated 2026-07-10. Numbers are early and narrow by design — read the *Limitations* section.
 
 ## TL;DR
 
@@ -17,9 +17,12 @@ supersede stale facts** — shows two measurable advantages on LongMemEval's two
 |---|---|---|
 | **Abstention** (false-premise questions; must decline) | GPT-4o, neutral prompt | 63% (19/30) |
 | | GPT-4o + honesty discipline | **97% (29/30)** |
-| **Knowledge-update** (a fact changes; answer with the current one), *bounded/unordered memory* | naive vector-store (keep all, no order) | 60% (18/30) |
-| | keep-first (cap-1, no supersede) | 7% (2/30) |
-| | **supersede-on-write (JARVIS)** | **77% (23/30)** |
+| **Knowledge-update**, *oracle full history* (n=78) | GPT-4o baseline on full history | 90% (70/78) |
+| | extracted-fact bag | 79% (62/78) |
+| | **supersede-on-write (JARVIS)** | **91% (71/78)** |
+| **Knowledge-update**, *bounded/unordered memory* (n=72) | naive vector-store (keep all, no order) | 51% (37/72) |
+| | keep-first (cap-1, no supersede) | 19% (14/72) |
+| | **supersede-on-write (JARVIS)** | **82% (59/72)** |
 
 And a methodological caveat for the whole field: **judging multiple candidate answers in one LLM
 call masks real differences** — it reported a false 100% for every condition on knowledge-update
@@ -59,36 +62,26 @@ where the honesty design is the lever.
 
 ## Experiment 2 — Knowledge-update (the invalidation axis)
 
-**Setup.** 30 `knowledge-update` questions. We extract one fact per session (identical extraction
-for all conditions), then answer under three memory policies:
+We measure this axis in two regimes; identical per-session fact extraction feeds all conditions.
 
-- *naive-hard*: all extracted facts, **shuffled**, no dates/order/labels (a vector store with no
-  recency signal).
-- *keep-first*: capacity-1 memory that keeps the first fact (for an update, the stale one).
-- *supersede-on-write (JARVIS)*: facts written in session order; same-topic writes supersede the
-  previous; only the active (latest) fact is shown, unlabeled.
+**Base / oracle regime (n = 78).** Three conditions: *baseline* (GPT-4o on the full oracle history),
+*bag* (extracted facts as a plain bag), *supersede-on-write* (facts written in session order,
+same-topic writes supersede the previous, only the active/latest fact shown).
 
-Per-response GPT-4o grading against the gold (updated) answer.
+**Result.** baseline **90% (70/78)**, bag **79% (62/78)**, supersede-on-write **91% (71/78)** —
+**+1 vs full-history baseline, +12 vs the compressed bag.** A frontier model almost saturates the
+task by reasoning over recency directly from the raw transcript, so the edge here is modest.
 
-**Result.** keep-first **7%**, naive-hard **60%**, supersede-on-write **77%**. The fair comparison —
-against a realistic naive vector store (naive-hard) — is **+17 points**; against keep-first, +70.
+**Hardened / bounded-memory regime (n = 72).** Three stricter policies: *naive-hard* (all facts,
+**shuffled**, no dates/order — a vector store with no recency signal), *keep-first* (capacity-1,
+keeps the first/stale fact), *supersede-on-write* (keeps the latest, unlabeled).
 
-**Reading.** When memory is *bounded or unordered* — the realistic regime, since no agent keeps full
-raw history — supersede-on-write's write-order truth gives a real edge. On the *oracle full-history*
-setting the task saturates (a strong model reasons recency by itself), so the advantage only appears
-under honest, memory-constrained conditions.
+**Result.** keep-first **19% (14/72)**, naive-hard **51% (37/72)**, supersede-on-write
+**82% (59/72)** — **+31 vs a realistic naive vector store, +63 vs keep-first.**
 
-**Two intensities (honest double-framing).** Measured in the full system with per-response judging,
-the same axis shows a *moderate* effect on the unrealistic oracle-full-history setting and a *strong*
-effect under bounded/unordered memory:
-
-| Setting | naive baseline | supersede-on-write (JARVIS) | edge |
-|---|---|---|---|
-| oracle, full raw history | 90% (baseline) / 87% (fact bag) | 93% | +3 / +6 |
-| **hardened: bounded/unordered memory** | 60% (shuffled bag) / 7% (keep-first) | **77%** | **+17 / +70** |
-
-The honest claim is the second row: supersede-on-write matters when the task actually requires
-*compressed memory with invalidation*, not plain reading of the full history.
+**Reading.** When memory is *bounded or unordered* — the realistic regime, since no deployed agent
+re-reads full raw history for every answer — supersede-on-write's write-order truth gives a real
+edge. This is where the architectural claim is strongest.
 
 ## Methodological finding (useful beyond this project)
 
@@ -96,8 +89,9 @@ Our first knowledge-update runs reported **100% for every condition**, suggestin
 saturated. It was not. The cause was the **judge**: grading three candidate answers in a single LLM
 call, GPT-4o marked plainly stale answers as correct (e.g. `27:12` graded correct against gold
 `25:50`). The same judge, given one answer at a time, graded it correctly. **Batch LLM-judging masks
-real differences.** Per-response judging revealed the true 7% / 60% / 77% spread. Anyone benchmarking
-memory or QA with an LLM judge should grade one candidate per call.
+real differences.** Per-response judging revealed the true spread: a modest `90 / 79 / 91` in oracle
+conditions and a strong `19 / 51 / 82` under bounded memory. Anyone benchmarking memory or QA with
+an LLM judge should grade one candidate per call.
 
 ## Limitations (read this)
 
@@ -106,7 +100,8 @@ memory or QA with an LLM judge should grade one candidate per call.
    end-to-end retrieval pipeline over 40–500 sessions.
 2. **We do not claim a leaderboard position.** The overall LongMemEval leaderboard is dense at
    94–96%; we have not built the scale retrieval to compete there.
-3. **n = 30** per axis (the full `_abs` set; a 30-item knowledge-update subset). Small.
+3. **Moderate sample sizes.** Abstention: all 30 `_abs` items. Knowledge-update: n=78 (base/oracle),
+   n=72 (bounded/hard). Below leaderboard scale.
 4. **LLM judge** (GPT-4o), with the batch-vs-per-response caveat above; per-response reduces but does
    not eliminate judge noise.
 5. Experiment 2's baselines (keep-first especially) are constructed; the fair one is naive-hard.
@@ -129,10 +124,11 @@ curl -L -o oracle.json \
 echo "OPENAI_API_KEY=sk-..." > .env
 
 # 3. run
-node abstention-bench.mjs 30          # Experiment 1 (honesty / abstention)
-node knowledge-update-hard.mjs --limit=30   # Experiment 2 (invalidation / supersede-on-write)
+node abstention-bench.mjs 30                 # Experiment 1 (honesty / abstention)
+node knowledge-update-hard.mjs --limit=72    # Experiment 2, bounded/hard regime
 ```
 
 Deterministic prompts (temperature 0); GPT-4o answerer and **per-response** GPT-4o judge.
 `supersede.mjs` is a minimal, self-contained extraction of the supersede-on-write policy — you do
-not need the full agent to reproduce the result. No dataset or secrets are committed to this repo.
+not need the full agent to reproduce the hardened result. The base/oracle numbers were measured in
+the full system. No dataset or secrets are committed to this repo.
