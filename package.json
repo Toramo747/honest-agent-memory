@@ -1,0 +1,11 @@
+{
+  "name": "honest-agent-memory",
+  "version": "0.1.0",
+  "description": "Honesty as a competitive edge: abstention & invalidation for agent memory on LongMemEval",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "abstention": "node abstention-bench.mjs 30",
+    "knowledge-update": "node knowledge-update-hard.mjs --limit=30"
+  }
+}

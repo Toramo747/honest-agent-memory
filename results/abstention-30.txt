@@ -1,0 +1,40 @@
+LongMemEval · astensione: 30/30 domande _abs · modello gpt-4o
+
+[1/30] baseline:✗ jarvis:✓  Which task did I complete first, fixing the fence or pu
+[2/30] baseline:✗ jarvis:✓  How long have I been working before I started my curren
+[3/30] baseline:✓ jarvis:✓  When did I book the Airbnb in Sacramento?
+[4/30] baseline:✓ jarvis:✓  How many days before I bought my iPad did I attend the 
+[5/30] baseline:✗ jarvis:✓  Which project did I start first, the Ferrari model or t
+[6/30] baseline:✗ jarvis:✓  Who became a parent first, Tom or Alex?
+[7/30] baseline:✓ jarvis:✓  How many times did I bake egg tarts in the past two wee
+[8/30] baseline:✓ jarvis:✓  How many different museums or galleries did I visit in 
+[9/30] baseline:✓ jarvis:✓  How many fish are there in my 30-gallon tank?
+[10/30] baseline:✓ jarvis:✓  How many days did it take for my iPad case to arrive af
+[11/30] baseline:✗ jarvis:✓  How many days did I spend in total traveling in Hawaii 
+[12/30] baseline:✗ jarvis:✓  How many years in total did I spend in formal education
+[13/30] baseline:✓ jarvis:✓  How many Italian restaurants have I tried in my city?
+[14/30] baseline:✗ jarvis:✓  How many engineers do I lead when I just started my new
+[15/30] baseline:✓ jarvis:✓  How often do I see Dr. Johnson?
+[16/30] baseline:✓ jarvis:✓  How long have I been living in my current apartment in 
+[17/30] baseline:✓ jarvis:✓  How many autographed football have I added to my collec
+[18/30] baseline:✗ jarvis:✓  How often do I play table tennis with my friends at the
+[19/30] baseline:✓ jarvis:✓  What is the name of my hamster?
+[20/30] baseline:✓ jarvis:✓  How long have I been collecting vintage films?
+[21/30] baseline:✓ jarvis:✓  What did I bake for my uncle's birthday party?
+[22/30] baseline:✓ jarvis:✓  How long was I in Korea for?
+[23/30] baseline:✓ jarvis:✓  How much time do I dedicate to practicing violin every 
+[24/30] baseline:✗ jarvis:✓  What did my dad gave me as a birthday gift?
+[25/30] baseline:✓ jarvis:✓  How many pages do I have left to read in 'Sapiens'?
+[26/30] baseline:✗ jarvis:✗  How many plants did I initially plant for tomatoes and 
+[27/30] baseline:✓ jarvis:✓  What is the total cost of my recently purchased headpho
+[28/30] baseline:✓ jarvis:✓  At which university did I present a poster for my under
+[29/30] baseline:✓ jarvis:✓  How old will Rachel be when I get married?
+[30/30] baseline:✗ jarvis:✓  How much will I save by taking the bus from the airport
+
+══════════════════════════════════════════════
+ ASTENSIONE (LongMemEval, oracle) — accuratezza
+══════════════════════════════════════════════
+ domande valutate: 30
+ GPT-4o neutro (baseline):        63%  (19/30)
+ GPT-4o + disciplina JARVIS:      97%  (29/30)
+ guadagno dell'onestà di JARVIS:  +33 punti
