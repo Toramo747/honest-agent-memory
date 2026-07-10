@@ -1,12 +1,12 @@
 # Honesty as a Competitive Edge: Abstention & Invalidation for Agent Memory on LongMemEval
 
-> **Status: private draft / priority marker.** This is an honest, reproducible write-up of two
-> focused experiments on [LongMemEval](https://github.com/xiaowu0162/LongMemEval) (ICLR 2025).
-> It does **not** claim to top the overall leaderboard. It documents a measured, differentiated
-> edge on the two axes where a *honest-by-design* memory agent should be strong — and a
-> methodological finding that matters for anyone benchmarking with an LLM judge.
+> An honest, reproducible write-up of two focused experiments on
+> [LongMemEval](https://github.com/xiaowu0162/LongMemEval) (ICLR 2025). It does **not** claim to top
+> the overall leaderboard. It documents a measured, differentiated edge on the two axes where a
+> *honest-by-design* memory agent should be strong — and a methodological finding that matters for
+> anyone benchmarking with an LLM judge.
 >
-> Draft dated 2026-07-10. Not yet published.
+> Dated 2026-07-10. Numbers are early (n=30) and narrow by design — read the *Limitations* section.
 
 ## TL;DR
 
