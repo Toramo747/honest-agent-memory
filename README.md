@@ -26,6 +26,8 @@ exact test** (same questions, so the correct test is paired, not independent-sam
 | **Knowledge-update**, *bounded/unordered memory* (n=72) | naive vector-store (keep all, no order) | 58% [47–69%] (42/72) |
 | | keep-first (cap-1, no supersede) | 17% [10–27%] (12/72) |
 | | **supersede-on-write (JARVIS)** | **81% [70–88%] (58/72)** — vs naive **+22, p=0.0025** |
+| **Knowledge-update**, *vs real deployed system* (n=72) | Mem0 (v2.0.11, automatic memory) | 67% [55–76%] (48/72) |
+| | **supersede-on-write (JARVIS)** | **81%** — vs Mem0 **+14, p=0.076 (trend, not yet significant)** |
 
 And a methodological caveat for the whole field: **judging multiple candidate answers in one LLM
 call masks real differences** — it reported a false 100% for every condition on knowledge-update
@@ -100,6 +102,26 @@ smaller, harder-earned number to the larger lucky one.
 re-reads full raw history for every answer — supersede-on-write's write-order truth gives a real
 edge. This is where the architectural claim is strongest.
 
+### Real-system baseline: Mem0
+
+The naive-hard and keep-first baselines are *constructed*. To check them against a **deployed**
+system, we ran [Mem0](https://github.com/mem0ai/mem0) (v2.0.11, GPT-4o LLM + `text-embedding-3-small`)
+on the same 72 knowledge-update items: Mem0 ingests each session with its own automatic fact
+extraction and add/update logic, we query it, and answer + judge identically to the other conditions.
+
+**Result.** Mem0 **67% [55–76%] (48/72)** — *above* the naive strawman (58%), *below*
+supersede-on-write (81%). supersede-on-write leads Mem0 by **+14 points, but this is a trend, not yet
+statistically significant** at n=72 (McNemar p=0.076; 18 items favor supersede, 8 favor Mem0). Two
+honest caveats: (a) Mem0's score is somewhat run-dependent — its add/update decisions call an LLM;
+(b) supersede-on-write also uses *question-conditioned* extraction, so the +14 is **not purely an
+invalidation effect** — better extraction contributes too.
+
+**Reading.** Against the real system we *lead but have not proven it*. This cuts both ways honestly:
+it shows the strawman wasn't rigged (a deployed system clears it by 9 points), and it keeps us honest
+about the true size of our edge over production memory. **Next step (declared):** measure on many more
+knowledge-update items (the non-oracle LongMemEval split has far more) to test whether the +14 reaches
+significance, and isolate the extraction confound.
+
 ## Methodological finding (useful beyond this project)
 
 Our first knowledge-update runs reported **100% for every condition**, suggesting the task was
@@ -125,8 +147,10 @@ an LLM judge should grade one candidate per call.
    which is **stochastic** (shuffled memory: 51–58% over two runs). We report its best run (58%,
    hardest for JARVIS) and seed the shuffle (`--seed`) for reproducibility.
 6. **Statistics.** Intervals are Wilson 95%; paired comparisons use McNemar's exact test. n is
-   moderate, so intervals are wide — read the CI, not just the point estimate. We have not yet
-   compared against deployed systems (e.g. Mem0/Zep) on these axes; that is the next step.
+   moderate, so intervals are wide — read the CI, not just the point estimate.
+7. **Real-system comparison so far only on knowledge-update.** supersede-on-write leads a deployed
+   Mem0 by +14 but not yet significantly (p=0.076, n=72); a larger-n run is the declared next step.
+   We have not compared against Mem0 on abstention, nor against Zep.
 
 ## Honest positioning
 
