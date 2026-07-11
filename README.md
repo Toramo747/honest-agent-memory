@@ -33,6 +33,30 @@ And a methodological caveat for the whole field: **judging multiple candidate an
 call masks real differences** — it reported a false 100% for every condition on knowledge-update
 until we switched to per-response judging.
 
+**Update 2026-07-11.** Public numbers are now aligned to the conservative canonical run:
+- bounded knowledge-update is reported as `81% vs 58%` (`+22`, `p=0.0025`), not the earlier lucky `+31`
+- `JARVIS vs Mem0` is reported as a **trend, not yet significant** (`81% vs 67%`, `p=0.076`)
+- oracle knowledge-update remains framed as a **statistical tie**, not a win
+
+## Positioning
+
+What this repo **does** support:
+
+- JARVIS shows a **strong abstention / honesty advantage** on a LongMemEval slice.
+- JARVIS shows a **real bounded-memory knowledge-update advantage** when stale-fact invalidation
+  actually matters.
+- JARVIS appears to lead a deployed memory system (Mem0) on the current 72-item slice, **but that
+  lead is not yet statistically significant**.
+
+What this repo **does not** support:
+
+- "JARVIS wins LongMemEval."
+- "JARVIS is the best memory system in the world."
+- "JARVIS has definitively beaten Mem0."
+
+Short version: this is a repository about **honest memory behavior**, not a generic leaderboard
+claim.
+
 ## Motivation
 
 The 2026 agent-memory literature repeatedly names the same open problems: curation (what *not* to
@@ -158,6 +182,22 @@ We are not the best at *remembering*. We appear to be — measurably — among t
 *declining when we shouldn't answer* and at *not carrying stale facts forward*, on a real ICLR
 benchmark. In a field prone to fabrication, that is a small but distinct niche, and it is backed by
 numbers rather than claims.
+
+If you care about:
+
+- refusal instead of fabrication,
+- stale-fact invalidation,
+- bounded-memory behavior that can be audited,
+
+then this repository is relevant.
+
+If you want:
+
+- a top overall LongMemEval leaderboard system,
+- a full production retrieval stack,
+- a universal "better than every memory library" claim,
+
+this repository is not claiming that.
 
 ## Reproduce
 
