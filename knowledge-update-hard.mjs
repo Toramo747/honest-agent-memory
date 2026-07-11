@@ -44,7 +44,13 @@ function parseJson(t) { try { return JSON.parse(t.match(/\{[\s\S]*\}/)?.[0] ?? t
 function formatSession(turns, date) {
   return `${date ? `[${date}] ` : ""}` + (Array.isArray(turns) ? turns : []).map((t) => `${t.role}: ${t.content}`).join("\n");
 }
-function shuffle(a) { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+// Shuffle SEEDATO per riproducibilità: il baseline naive-hard è stocastico (l'ordine del
+// bag cambia il risultato). Senza seed, naive-hard oscilla (51–58% su due run). Con seed
+// fisso la run è deterministica. Cambia l'ordine con --seed=N.
+const SEED = Number(process.argv.find((a) => a.startsWith("--seed="))?.split("=")[1] ?? 42);
+function mulberry32(s) { return function () { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const rand = mulberry32(SEED);
+function shuffle(a) { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
 
 // Estrazione identica per entrambe le condizioni (nessun vantaggio nell'estrazione).
 async function extractFact(item, turns, date, i) {
