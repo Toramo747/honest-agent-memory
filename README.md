@@ -57,6 +57,10 @@ What this repo **does not** support:
 Short version: this is a repository about **honest memory behavior**, not a generic leaderboard
 claim.
 
+Supporting documents:
+- [WORLD-POSITIONING.md](C:\ai\publish\honest-agent-memory\WORLD-POSITIONING.md)
+- [FAQ.md](C:\ai\publish\honest-agent-memory\FAQ.md)
+
 ## Motivation
 
 The 2026 agent-memory literature repeatedly names the same open problems: curation (what *not* to
